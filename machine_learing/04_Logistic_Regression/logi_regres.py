@@ -24,7 +24,7 @@ def sigmoid(inx):
         return np.exp(inx) / (1 + np.exp(inx))
 
 
-# 定义梯度上升函数
+# 梯度上升函数
 def grad_ascent(data_mat_in, class_labels):
     data_mat = np.mat(data_mat_in)
     label_mat = np.mat(class_labels).transpose()
