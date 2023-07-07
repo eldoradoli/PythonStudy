@@ -14,8 +14,14 @@ def load_data_set():
     return data_mat, label_mat
 
 
-def sigmoid(x):
-    return 1.0 / (1 + np.exp(-x))
+# def sigmoid(x):
+#     return 1.0 / (1 + np.exp(-x))
+# 优化后的激活函数,避免了出现极大的数据溢出
+def sigmoid(inx):
+    if inx >= 0:
+        return 1.0 / (1 + np.exp(-inx))
+    else:
+        return np.exp(inx) / (1 + np.exp(inx))
 
 
 # 定义梯度上升函数
@@ -101,6 +107,35 @@ def classify_vec(inx, weights):
         return 0.0
 
 
+def horse_test():
+    fr_train = open('horseColicTraining.txt')
+    fr_test = open('horseColicTest.txt')
+    training_set = []
+    training_labels = []
+    for line in fr_train.readlines():
+        current_line = line.strip().split('\t')
+        line_arr = []
+        for i in range(21):  # number of features
+            line_arr.append(float(current_line[i]))
+        training_set.append(line_arr)
+        training_labels.append(float(current_line[21]))
+    training_weights = stochastic_grad_ascent_1(np.array(training_set), training_labels, 1000)
+    error_count = 0
+    num_test_vec = 0.0
+    for line in fr_test.readlines():
+        num_test_vec += 1.0
+        current_line = line.strip().split('\t')
+        line_arr = []
+        for i in range(21):
+            line_arr.append(float(current_line[i]))
+        if int(classify_vec(np.array(line_arr), training_weights)) != int(current_line[21]):
+            error_count += 1
+    error_rate = float(error_count / num_test_vec)
+    print("the error rate of this test is: ", error_rate)
+    return error_rate
+
+
 data_mat, label_mat = load_data_set()
 weights = stochastic_grad_ascent_1(data_mat, label_mat)
 plot_best_fit(weights)
+horse_test()
