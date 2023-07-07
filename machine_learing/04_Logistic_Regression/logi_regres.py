@@ -1,5 +1,4 @@
 import random
-
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -92,6 +91,14 @@ def stochastic_grad_ascent_1(data_mat, class_labels, num_iter=150):
             weights = weights + alpha * data_mat[rand_index] * error
             del (data_index[rand_index])
     return weights
+
+
+def classify_vec(inx, weights):
+    prob = sigmoid(sum(inx * weights))
+    if prob > 0.5:
+        return 1.0
+    else:
+        return 0.0
 
 
 data_mat, label_mat = load_data_set()
